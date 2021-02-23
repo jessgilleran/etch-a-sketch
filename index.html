@@ -8,13 +8,17 @@
 
 <body>
     <div class='header'>
-        <button class='reset-prompt' type='button'>Reset Grid</button>
         <h1>Etch-A-Sketch</h1>
-        <button class='reset-prompt hide-me' type='button'>Reset Grid</button>
     </div>
 
     <div class='content-container'>
         <div class='left-holder'>
+            <button class='menu-item clean-button' type='button'>Clean Grid</button>
+            <form>
+                <label class='menu-item' for='grid-size'>Grid size: </label>
+                <input placeholder='16' type='text' class='menu-item' id='grid-size' name='grid-size'>
+            </form>
+            <p id='base-color'></p>    
 
         </div>
         <div class='grid-container'>

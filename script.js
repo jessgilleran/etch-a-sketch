@@ -4,11 +4,19 @@
 
 //Create grid on page open
 const container = document.querySelector('.grid-container');
-createGrid();
+let gridSize = 16;
+const baseColorLabel = document.querySelector('#base-color');
+createGrid(gridSize);
+const gridSizeInput = document.querySelector('#grid-size');
+gridSizeInput.value = gridSize;
+gridSizeInput.addEventListener('change',validateInput);
+
+
+
 
 function createGridEvent (divList) {
     let bgColor = getRandomColor();
-    console.log(bgColor);
+    baseColorLabel.innerText = bgColor;
     let shadeFactor = getShadeFactor(bgColor);
 
     let bgColorValues = separateColor(bgColor);
@@ -25,7 +33,6 @@ function createGridEvent (divList) {
                 let currentColor = item.style.backgroundColor;
             
                 event.target.setAttribute('style', `background: ${darkenBackground(currentColor,shadeFactor)}`);
-                console.log(item.style.backgroundColor);
             }
             
         })
@@ -66,8 +73,26 @@ function getRandomColor () {
     return bgColor;
 }
 
-const resetButton = document.querySelector('.reset-prompt');
-resetButton.addEventListener('click',promptUser);
+
+
+function validateInput(e) {
+    if (e.target.value > 0 && e.target.value < 101) {
+        gridSize = e.target.value;
+        gridSizeInput.value = gridSize;
+        clearGrid();
+        createGrid(e.target.value);
+    }
+}
+
+function cleanGrid() {
+    for (const item of (document.querySelectorAll('.square'))) {
+        item.style.backgroundColor = 'white'
+        item.style.border = '1px solid #5e6363';
+    }
+}
+
+const cleanButton = document.querySelector('.clean-button');
+cleanButton.addEventListener('click',cleanGrid);
 
 function clearGrid() {
     document.querySelectorAll('.square').forEach(el => el.remove());
@@ -76,21 +101,7 @@ function clearGrid() {
     
 }
 
-function promptUser() {
-    console.log('in prompt');
-    let validInput = false;
-    clearGrid();
-    do {
-        let side = parseInt(prompt('Enter grid size (enter a number from 1 to 100): '));
-        if (side >= 1 && side <= 100) {
-            
-            validInput = true;
-            createGrid(side);
-        } 
-    }while(!validInput);
-}
-
-function createGrid (size=16) {
+function createGrid (size) {
 
     container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     
