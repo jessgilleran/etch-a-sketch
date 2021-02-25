@@ -18,7 +18,25 @@
                 <label class='menu-item' for='grid-size'>Grid size: </label>
                 <input placeholder='16' type='text' class='menu-item' id='grid-size' name='grid-size'>
             </form>
-            <p id='base-color'></p>    
+
+            <div class='color-picker-div'>
+                <label for='color-picker' class='menu-item'>Pick a color: </label>
+                <input type='color' id='color-picker' class='menu-item'>
+            </div>
+            
+            <div class='current-color' class='menu-item'>
+                <label for='current-color' class='menu-item'>Current color: </label>
+                <span id='current-color' class='menu-item'></span>
+            </div>
+
+            <form class='menu-item'>
+                <label for='rainbow-checkbox'>Rainbow? </label>
+                <input type='checkbox' id='rainbow-checkbox'>
+                <br><br>
+                <label id='shading-label' for='shading-checkbox'>Shading?</label>
+                <input type='checkbox' id='shading-checkbox'>
+            </form>
+    
 
         </div>
         <div class='grid-container'>
@@ -28,6 +46,10 @@
             
         </div>
 
+    </div>
+
+    <div class='footer'>
+        <span>Created by Jess Gilleran</span>
     </div>
 
     <script src="script.js"></script>
