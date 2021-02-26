@@ -23,7 +23,6 @@ h1 {
     font-size: 4vh;
 }
 
-/* || Formatting for container */
 .content-container {
     display: flex;
     height: calc(88vh - 10px);
@@ -85,7 +84,6 @@ input[type='checkbox'] {
 #shading-label {
     margin-top: 20px;
 }
-
 
 .footer {
     height: 5vh;

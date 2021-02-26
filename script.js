@@ -3,7 +3,7 @@
 //Get container element
 const container = document.querySelector('.grid-container');
 
-//Initial grid settings
+//Initial grid and options settings
 let gridSize = 16;
 let bgColor = 'rgb(199,117,235)';
 let shading = false;
@@ -22,7 +22,6 @@ gridSizeInput.addEventListener('change',validateInput);
 //Get the color picker element and create event
 const colorPicker = document.querySelector('#color-picker');
 colorPicker.defaultValue = '#c775eb';
-console.log(colorPicker.defaultValue);
 colorPicker.addEventListener('change',setbgColor);
 
 //Create the color label
@@ -65,7 +64,7 @@ function setbgColor(event) {
                 currentColorLabel.innerText = convertColor(bgColor);
         } else {
                 currentColorLabel.innerText = bgColor;
-            }
+        }
     }
 }
 
@@ -140,7 +139,7 @@ function getShadeFactor(color) {
     let rFactor = colorArray[0]/10;
     let gFactor = colorArray[1]/10;
     let bFactor = colorArray[2]/10;
-    //console.log([rFactor,gFactor,bFactor]);
+    
     return [rFactor,gFactor,bFactor];
 }
 
@@ -172,9 +171,6 @@ function darkenBackground (currentColor,shadeFactor) {
     if (newgValue < 0) {
         newgValue = 0;
     }
-
-    console.log(`${newrValue},${newgValue},${newbValue}`);
-
     return `rgb(${newrValue},${newgValue},${newbValue})`;
 }
 
@@ -185,8 +181,6 @@ function getRandomColor () {
     let bgColor = `rgb(${x},${y},${z})`;
     return bgColor;
 }
-
-
 
 function validateInput(e) {
     if (e.target.value > 0 && e.target.value < 101) {
@@ -201,15 +195,6 @@ function cleanGrid() {
     for (const item of (document.querySelectorAll('.square'))) {
         item.style.backgroundColor = 'white';
     }
-}
-
-
-
-function clearGrid() {
-    document.querySelectorAll('.square').forEach(el => el.remove());
-    
-        //item.setAttribute('style','background: white; border: 1px solid #5e6363');
-    
 }
 
 
