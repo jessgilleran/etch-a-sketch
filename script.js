@@ -21,6 +21,8 @@ gridSizeInput.addEventListener('change',validateInput);
 
 //Get the color picker element and create event
 const colorPicker = document.querySelector('#color-picker');
+colorPicker.defaultValue = '#c775eb';
+console.log(colorPicker.defaultValue);
 colorPicker.addEventListener('change',setbgColor);
 
 //Create the color label
@@ -28,9 +30,11 @@ const currentColorLabel = document.querySelector('#current-color');
 currentColorLabel.innerText = bgColor;
 
 const rainbowCheckbox = document.querySelector('#rainbow-checkbox');
+rainbowCheckbox.checked = false;
 rainbowCheckbox.addEventListener('change',toggleRainbow);
 
 const shadingCheckbox = document.querySelector('#shading-checkbox');
+shadingCheckbox.checked = false;
 shadingCheckbox.addEventListener('change',toggleShading);
 
 //Create the starting grid
@@ -56,16 +60,16 @@ function createGrid (size) {
 
 function setbgColor(event) {
     bgColor = event.target.value;
-    currentColorLabel.innerText = bgColor;
-    //clearGrid();
-    //createGrid(gridSize);
+    if (rainbowColor === false) {
+        if (bgColor[0] === '#') {
+                currentColorLabel.innerText = convertColor(bgColor);
+        } else {
+                currentColorLabel.innerText = bgColor;
+            }
+    }
 }
 
 function createGridEvent (divList) {
-    
-    let shadeFactor = getShadeFactor(bgColor);
-
-    let bgColorValues = separateColor(bgColor);
     for (const item of divList) {
         item.addEventListener("mouseenter", function( event ) {
             
@@ -74,30 +78,41 @@ function createGridEvent (divList) {
             if (item.style.backgroundColor === 'white' && rainbowColor === false) {
                 item.setAttribute('style', `background: ${bgColor}`);
                 //Set the base-color attribute to the current color
-                item.setAttribute('data-base-color',bgColor);
-                console.log(item.getAttribute('data-base-color'));
+                item.setAttribute('data-shade-factor',getShadeFactor(bgColor));
+                //console.log(item.getAttribute('data-shade-factor'));
+            
             } else if (item.style.backgroundColor === 'white' && rainbowColor === true) {
                 item.setAttribute('style', `background: ${getRandomColor()}`);
-                item.setAttribute('data-base-color',item.style.backgroundColor);
-                console.log(item.getAttribute('data-base-color'));
+                //Set the base-color attribute to the current background color
+                item.setAttribute('data-shade-factor',getShadeFactor(item.style.backgroundColor));
+                //console.log(item.getAttribute('data-shade-factor'));
             }
-            //If the background color is not white, take the current 
-            //background color and minus the shade factor
-            else {
+            //If the background color is not white or black and the shade factor is on, subtract 
+            //the shade factor
+            else if (shading && item.style.backgroundColor != '#000000') {
                 let currentColor = item.style.backgroundColor;
+                let shadeArray = item.getAttribute('data-shade-factor');
+                console.log(`current color: ${currentColor}`);
+                console.log(`shade array: ${shadeArray}`);
             
-                event.target.setAttribute('style', `background: ${darkenBackground(currentColor,shadeFactor)}`);
+                item.setAttribute('style', `background: ${darkenBackground(currentColor,shadeArray)}`);
             }
-            
         })
     }
+}
+
+function convertColor (hexColor) {
+    let rSlice = hexColor.slice(1,3);
+    let gSlice = hexColor.slice(3,5);
+    let bSlice = hexColor.slice(5);
+    return `rgb(${parseInt(rSlice,16)},${parseInt(gSlice,16)},${parseInt(bSlice,16)})`;
 }
 
 function toggleRainbow (event) {
     //Check if input is checked
     if (event.target.checked === false) {
         rainbowColor = false;
-        currentColorLabel.innerText = bgColor;
+        currentColorLabel.innerText = convertColor(bgColor);
     } else {
         rainbowColor = true;
         currentColorLabel.innerText = 'Rainbow!';
@@ -113,32 +128,52 @@ function toggleShading (event) {
     }
 }
 
-
-
-
-
-function getShadeFactor(rgbValue) {
+function getShadeFactor(color) {
     
-    let colorArray = separateColor(rgbValue);
+    //Convert color to rgb if in hex form
+    if (color[0] === '#') {
+        color = convertColor(color);
+    } 
+
+    let colorArray = separateColor(color);
 
     let rFactor = colorArray[0]/10;
     let gFactor = colorArray[1]/10;
     let bFactor = colorArray[2]/10;
-    console.log([rFactor,gFactor,bFactor]);
+    //console.log([rFactor,gFactor,bFactor]);
     return [rFactor,gFactor,bFactor];
 }
 
 function separateColor(rgbValue) {
     let myRe = /\d+/g;
-    return rgbValue.match(myRe);
+    let stringArray = rgbValue.match(myRe);
+    //Convert string values to numbers
+    let intArray = stringArray.map(Number);
+
+    return intArray;
 }
 
 function darkenBackground (currentColor,shadeFactor) {
     let currentColorArray = separateColor(currentColor);
+    
+    let shadeIntArray = shadeFactor.split(',').map(Number);
+    
+    let newrValue = currentColorArray[0] - shadeIntArray[0];
+    let newgValue = currentColorArray[1] - shadeIntArray[1];
+    let newbValue = currentColorArray[2] - shadeIntArray[2];
 
-    let newrValue = currentColorArray[0] - shadeFactor[0];
-    let newgValue = currentColorArray[1] - shadeFactor[1];
-    let newbValue = currentColorArray[2] - shadeFactor[2];
+    //Ensure rgb value don't get below 0
+    if (newrValue < 0) {
+        newrValue = 0;
+    }
+    if (newbValue < 0) {
+        newbValue = 0;
+    }
+    if (newgValue < 0) {
+        newgValue = 0;
+    }
+
+    console.log(`${newrValue},${newgValue},${newbValue}`);
 
     return `rgb(${newrValue},${newgValue},${newbValue})`;
 }
