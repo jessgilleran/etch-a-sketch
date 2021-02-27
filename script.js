@@ -101,10 +101,16 @@ function createGridEvent (divList) {
 }
 
 function convertColor (hexColor) {
-    let rSlice = hexColor.slice(1,3);
-    let gSlice = hexColor.slice(3,5);
-    let bSlice = hexColor.slice(5);
-    return `rgb(${parseInt(rSlice,16)},${parseInt(gSlice,16)},${parseInt(bSlice,16)})`;
+
+    if (hexColor[0] === '#') {
+        let rSlice = hexColor.slice(1,3);
+        let gSlice = hexColor.slice(3,5);
+        let bSlice = hexColor.slice(5);
+        return `rgb(${parseInt(rSlice,16)},${parseInt(gSlice,16)},${parseInt(bSlice,16)})`;
+    }
+    else {
+        return hexColor;
+    }  
 }
 
 function toggleRainbow (event) {
