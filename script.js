@@ -191,6 +191,10 @@ function validateInput(e) {
     }
 }
 
+function clearGrid() {
+    document.querySelectorAll('.square').forEach(el => el.remove());
+}
+
 function cleanGrid() {
     for (const item of (document.querySelectorAll('.square'))) {
         item.style.backgroundColor = 'white';
